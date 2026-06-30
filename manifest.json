@@ -2,7 +2,7 @@
   "name": "Mannz — Words. Will. Wisdom.",
   "short_name": "Mannz",
   "description": "Daily wisdom for wealth, mindset, and life. Quotes, ebooks, and journaling by Manish Shah.",
-  "start_url": "/",
+  "start_url": "/MANNZ/",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#0a0a0a",
@@ -29,14 +29,14 @@
       "name": "Today's Quote",
       "short_name": "Quote",
       "description": "Get today's wisdom",
-      "url": "/?screen=home",
+      "url": "/MANNZ/?screen=home",
       "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
     },
     {
       "name": "My Journal",
       "short_name": "Journal",
       "description": "Open your daily journal",
-      "url": "/?screen=journal",
+      "url": "/MANNZ/?screen=journal",
       "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
     }
   ]
