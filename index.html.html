@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0a0a0a" />
+  <meta name="description" content="Mannz — Words. Will. Wisdom. Daily wisdom for wealth, mindset & life." />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Mannz" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <title>Mannz — Words. Will. Wisdom.</title>
+  <style>
+    :root {
+      --gold: #c9a84c;
+      --gold-light: #e8c97a;
+      --gold-dim: #8a6d2f;
+      --black: #0a0a0a;
+      --surface: #111111;
+      --surface2: #1a1a1a;
+      --surface3: #222222;
+      --text: #f0ead8;
+      --text-muted: #8a8070;
+      --border: #2a2a2a;
+      --radius: 16px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      background: var(--black);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      -webkit-tap-highlight-color: transparent;
+      overscroll-behavior: none;
+    }
+
+    /* ── SPLASH / LOADING ── */
+    #splash {
+      position: fixed; inset: 0; z-index: 999;
+      background: var(--black);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 16px;
+      transition: opacity 0.6s ease;
+    }
+    #splash.hide { opacity: 0; pointer-events: none; }
+    .splash-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 56px; font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 6px;
+      animation: goldPulse 2s ease infinite;
+    }
+    .splash-tagline {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 14px; letter-spacing: 4px;
+      color: var(--text-muted); text-transform: uppercase;
+    }
+    @keyframes goldPulse {
+      0%, 100% { text-shadow: 0 0 20px rgba(201,168,76,0.3); }
+      50% { text-shadow: 0 0 40px rgba(201,168,76,0.7); }
+    }
+
+    /* ── SHELL ── */
+    #app { display: flex; flex-direction: column; min-height: 100vh; }
+
+    /* ── HEADER ── */
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(10,10,10,0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 20px;
+      height: 60px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .logo-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px; font-weight: 700;
+      color: var(--gold); letter-spacing: 3px;
+    }
+    .header-tag {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 11px; letter-spacing: 2.5px;
+      color: var(--text-muted); text-transform: uppercase;
+    }
+    .install-btn {
+      background: transparent;
+      border: 1px solid var(--gold-dim);
+      color: var(--gold);
+      font-size: 11px; letter-spacing: 1px;
+      padding: 6px 12px; border-radius: 20px;
+      cursor: pointer; font-family: 'Inter', sans-serif;
+      display: none;
+      transition: all 0.2s;
+    }
+    .install-btn:hover { background: var(--gold); color: var(--black); }
+    .install-btn.visible { display: block; }
+
+    /* ── SCREENS ── */
+    .screen { display: none; flex-direction: column; flex: 1; }
+    .screen.active { display: flex; }
+
+    /* ── HOME ── */
+    .hero {
+      padding: 40px 24px 32px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+      background: radial-gradient(ellipse at top, rgba(201,168,76,0.06) 0%, transparent 60%);
+    }
+    .hero-eyebrow {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 12px; letter-spacing: 3px;
+      color: var(--gold-dim); text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .daily-quote-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px; line-height: 1.55;
+      color: var(--text); font-style: italic;
+      max-width: 340px; margin: 0 auto 16px;
+    }
+    .daily-quote-attr {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px; letter-spacing: 2px;
+      color: var(--gold); text-transform: uppercase;
+    }
+    .quote-actions {
+      display: flex; gap: 12px; justify-content: center; margin-top: 20px;
+    }
+    .btn-ghost {
+      background: transparent; border: 1px solid var(--border);
+      color: var(--text-muted); padding: 8px 16px;
+      border-radius: 20px; font-size: 12px;
+      cursor: pointer; font-family: 'Inter', sans-serif;
+      transition: all 0.2s;
+    }
+    .btn-ghost:hover, .btn-ghost:active { border-color: var(--gold); color: var(--gold); }
+    .btn-gold {
+      background: var(--gold); color: var(--black);
+      border: none; padding: 8px 16px;
+      border-radius: 20px; font-size: 12px; font-weight: 500;
+      cursor: pointer; font-family: 'Inter', sans-serif;
+      transition: all 0.2s;
+    }
+    .btn-gold:hover { background: var(--gold-light); }
+
+    /* Pillars */
+    .pillars {
+      padding: 28px 20px;
+      display: flex; flex-direction: column; gap: 14px;
+    }
+    .pillars-label {
+      font-size: 10px; letter-spacing: 3px;
+      color: var(--text-muted); text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .pillar-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      display: flex; align-items: center; gap: 16px;
+    }
+    .pillar-card:hover, .pillar-card:active { border-color: var(--gold-dim); background: var(--surface2); }
+    .pillar-icon { font-size: 24px; flex-shrink: 0; }
+    .pillar-info { flex: 1; }
+    .pillar-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 15px; color: var(--gold); margin-bottom: 4px;
+    }
+    .pillar-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+    .pillar-arrow { color: var(--gold-dim); font-size: 16px; }
+
+    /* ── QUOTES SCREEN ── */
+    .screen-header {
+      padding: 20px 20px 0;
+      font-family: 'Playfair Display', serif;
+      font-size: 22px; color: var(--gold);
+    }
+    .screen-sub {
+      padding: 4px 20px 16px;
+      font-size: 12px; color: var(--text-muted); letter-spacing: 1px;
+    }
+    .theme-tabs {
+      display: flex; gap: 8px;
+      padding: 0 20px 16px;
+      overflow-x: auto; scrollbar-width: none;
+    }
+    .theme-tabs::-webkit-scrollbar { display: none; }
+    .tab {
+      background: var(--surface); border: 1px solid var(--border);
+      color: var(--text-muted); padding: 6px 14px;
+      border-radius: 20px; font-size: 12px; white-space: nowrap;
+      cursor: pointer; transition: all 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+    .tab.active { background: var(--gold); color: var(--black); border-color: var(--gold); font-weight: 500; }
+    .quotes-grid {
+      flex: 1; overflow-y: auto;
+      padding: 0 20px 100px;
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .quote-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      cursor: pointer;
+      transition: border-color 0.2s;
+      position: relative; overflow: hidden;
+    }
+    .quote-card::before {
+      content: ''; position: absolute;
+      top: 0; left: 0; width: 3px; height: 100%;
+      background: var(--gold-dim);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .quote-card:hover::before, .quote-card:active::before { opacity: 1; }
+    .quote-card:hover, .quote-card:active { border-color: var(--gold-dim); }
+    .quote-mark {
+      font-family: 'Playfair Display', serif;
+      font-size: 36px; color: var(--gold); opacity: 0.3;
+      line-height: 1; margin-bottom: 4px;
+    }
+    .quote-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 17px; line-height: 1.6;
+      color: var(--text); font-style: italic;
+      margin-bottom: 12px;
+    }
+    .quote-theme-tag {
+      display: inline-block;
+      font-size: 10px; letter-spacing: 2px;
+      color: var(--gold); text-transform: uppercase;
+      border: 1px solid var(--gold-dim);
+      padding: 2px 8px; border-radius: 10px;
+    }
+    .quote-share-row {
+      display: flex; justify-content: flex-end; gap: 10px; margin-top: 12px;
+    }
+    .icon-btn {
+      background: none; border: none;
+      color: var(--text-muted); font-size: 16px;
+      cursor: pointer; padding: 4px;
+      transition: color 0.2s;
+    }
+    .icon-btn:hover { color: var(--gold); }
+
+    /* ── BOOKS SCREEN ── */
+    .books-list {
+      padding: 8px 20px 100px;
+      display: flex; flex-direction: column; gap: 14px;
+    }
+    .book-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      display: flex; gap: 16px; align-items: flex-start;
+      cursor: pointer; transition: border-color 0.2s;
+    }
+    .book-card:hover { border-color: var(--gold-dim); }
+    .book-cover {
+      width: 56px; height: 72px;
+      background: linear-gradient(135deg, var(--surface3), var(--surface2));
+      border: 1px solid var(--gold-dim);
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; flex-shrink: 0;
+    }
+    .book-info { flex: 1; }
+    .book-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 15px; color: var(--gold); margin-bottom: 6px;
+      line-height: 1.3;
+    }
+    .book-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; margin-bottom: 10px; }
+    .book-price {
+      font-size: 13px; color: var(--text); font-weight: 500;
+    }
+    .book-badge {
+      display: inline-block;
+      font-size: 10px; letter-spacing: 1.5px;
+      background: rgba(201,168,76,0.12);
+      color: var(--gold); padding: 2px 8px;
+      border-radius: 10px; margin-bottom: 8px;
+    }
+
+    /* ── JOURNAL SCREEN ── */
+    .journal-wrap { padding: 0 20px 100px; }
+    .journal-date {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 13px; letter-spacing: 2px;
+      color: var(--gold-dim); text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .journal-prompt {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--gold);
+      border-radius: var(--radius);
+      padding: 16px 18px; margin-bottom: 16px;
+    }
+    .prompt-label { font-size: 10px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; margin-bottom: 6px; }
+    .prompt-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 17px; font-style: italic; color: var(--text); line-height: 1.5;
+    }
+    .journal-textarea {
+      width: 100%; min-height: 200px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 16px;
+      color: var(--text); font-family: 'Cormorant Garamond', serif;
+      font-size: 16px; line-height: 1.7; resize: none;
+      transition: border-color 0.2s;
+    }
+    .journal-textarea:focus { outline: none; border-color: var(--gold-dim); }
+    .journal-textarea::placeholder { color: var(--text-muted); }
+    .journal-save {
+      width: 100%; margin-top: 12px;
+      background: var(--gold); color: var(--black);
+      border: none; padding: 14px;
+      border-radius: var(--radius); font-size: 14px; font-weight: 500;
+      cursor: pointer; font-family: 'Inter', sans-serif;
+      letter-spacing: 1px; transition: background 0.2s;
+    }
+    .journal-save:hover { background: var(--gold-light); }
+    .saved-entries { margin-top: 24px; }
+    .saved-label { font-size: 10px; letter-spacing: 2.5px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 12px; }
+    .entry-item {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 14px 16px; margin-bottom: 10px;
+    }
+    .entry-date { font-size: 11px; color: var(--gold-dim); margin-bottom: 6px; }
+    .entry-preview { font-size: 14px; color: var(--text-muted); line-height: 1.5; }
+
+    /* ── BOTTOM NAV ── */
+    nav {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: rgba(10,10,10,0.95);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-top: 1px solid var(--border);
+      display: flex; height: 64px;
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    .nav-btn {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 4px; background: none; border: none;
+      cursor: pointer; padding: 8px 4px;
+      transition: color 0.2s;
+    }
+    .nav-icon { font-size: 20px; }
+    .nav-label { font-size: 10px; letter-spacing: 1px; color: var(--text-muted); font-family: 'Inter', sans-serif; }
+    .nav-btn.active .nav-icon { filter: drop-shadow(0 0 4px rgba(201,168,76,0.6)); }
+    .nav-btn.active .nav-label { color: var(--gold); }
+
+    /* ── TOAST ── */
+    #toast {
+      position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px);
+      background: var(--surface3); border: 1px solid var(--gold-dim);
+      color: var(--text); padding: 10px 20px; border-radius: 24px;
+      font-size: 13px; opacity: 0; transition: all 0.3s;
+      pointer-events: none; white-space: nowrap; z-index: 200;
+    }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ── MODAL ── */
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 300;
+      background: rgba(0,0,0,0.85);
+      display: none; align-items: flex-end;
+      backdrop-filter: blur(4px);
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-sheet {
+      width: 100%; background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-radius: 20px 20px 0 0;
+      padding: 24px 24px 48px;
+      animation: slideUp 0.3s ease;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(40px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .modal-handle {
+      width: 36px; height: 4px;
+      background: var(--border); border-radius: 2px;
+      margin: 0 auto 20px;
+    }
+    .modal-quote {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px; font-style: italic; color: var(--text);
+      line-height: 1.6; margin-bottom: 20px;
+    }
+    .modal-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .modal-close {
+      position: absolute; top: 20px; right: 20px;
+      background: none; border: none; color: var(--text-muted);
+      font-size: 20px; cursor: pointer;
+    }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+  </style>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash">
+  <div class="splash-logo">MANNZ</div>
+  <div class="splash-tagline">Words · Will · Wisdom</div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- QUOTE MODAL -->
+<div class="modal-overlay" id="quoteModal">
+  <div class="modal-sheet" style="position:relative;">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-quote" id="modalQuoteText"></div>
+    <div class="modal-actions">
+      <button class="btn-gold" onclick="copyQuote()">📋 Copy</button>
+      <button class="btn-ghost" onclick="shareQuote()">↗ Share</button>
+      <button class="btn-ghost" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<div id="app">
+  <header>
+    <div>
+      <div class="logo-text">MANNZ</div>
+    </div>
+    <div class="header-tag">Words · Will · Wisdom</div>
+    <button class="install-btn" id="installBtn" onclick="installApp()">⬇ Install</button>
+  </header>
+
+  <!-- HOME -->
+  <div class="screen active" id="screen-home">
+    <div class="hero">
+      <div class="hero-eyebrow">✦ Today's Wisdom</div>
+      <div class="daily-quote-text" id="dailyQuote">Loading today's wisdom...</div>
+      <div class="daily-quote-attr">— Mannz</div>
+      <div class="quote-actions">
+        <button class="btn-ghost" onclick="newDailyQuote()">↺ New Quote</button>
+        <button class="btn-gold" onclick="openDailyModal()">Share ↗</button>
+      </div>
+    </div>
+    <div class="pillars">
+      <div class="pillars-label">Explore</div>
+      <div class="pillar-card" onclick="goTo('quotes')">
+        <div class="pillar-icon">💰</div>
+        <div class="pillar-info">
+          <div class="pillar-title">Money Moves for Wealthy Wins</div>
+          <div class="pillar-desc">Wealth wisdom, financial mindset, and abundance principles</div>
+        </div>
+        <div class="pillar-arrow">›</div>
+      </div>
+      <div class="pillar-card" onclick="goTo('quotes'); setTab('Generation Connect')">
+        <div class="pillar-icon">🌿</div>
+        <div class="pillar-info">
+          <div class="pillar-title">Generation Connect</div>
+          <div class="pillar-desc">Bridging generations through shared humanity and unmet needs</div>
+        </div>
+        <div class="pillar-arrow">›</div>
+      </div>
+      <div class="pillar-card" onclick="goTo('quotes'); setTab('Wisdom')">
+        <div class="pillar-icon">🕊️</div>
+        <div class="pillar-info">
+          <div class="pillar-title">Wisdom. Will. Gratitude.</div>
+          <div class="pillar-desc">Mindset, resilience, and the grace of a grateful life</div>
+        </div>
+        <div class="pillar-arrow">›</div>
+      </div>
+      <div class="pillar-card" onclick="goTo('journal')">
+        <div class="pillar-icon">📓</div>
+        <div class="pillar-info">
+          <div class="pillar-title">Daily Journal</div>
+          <div class="pillar-desc">Reflect. Write. Grow. Your private wisdom journal</div>
+        </div>
+        <div class="pillar-arrow">›</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUOTES -->
+  <div class="screen" id="screen-quotes">
+    <div class="screen-header">Quote Gallery</div>
+    <div class="screen-sub">90 quotes · 10 themes</div>
+    <div class="theme-tabs" id="themeTabs"></div>
+    <div class="quotes-grid" id="quotesGrid"></div>
+  </div>
+
+  <!-- BOOKS -->
+  <div class="screen" id="screen-books">
+    <div class="screen-header">Mannz Books</div>
+    <div class="screen-sub">Digital products by Manish Shah</div>
+    <div class="books-list" id="booksList"></div>
+  </div>
+
+  <!-- JOURNAL -->
+  <div class="screen" id="screen-journal">
+    <div class="screen-header">My Journal</div>
+    <div class="screen-sub">Private reflections · stored on your device</div>
+    <div class="journal-wrap">
+      <div class="journal-date" id="journalDate"></div>
+      <div class="journal-prompt" id="journalPrompt">
+        <div class="prompt-label">Today's Prompt</div>
+        <div class="prompt-text" id="promptText"></div>
+      </div>
+      <textarea class="journal-textarea" id="journalEntry" placeholder="Write freely. This is your space..."></textarea>
+      <button class="journal-save" onclick="saveEntry()">Save Entry ✓</button>
+      <div class="saved-entries" id="savedEntries"></div>
+    </div>
+  </div>
+
+  <nav>
+    <button class="nav-btn active" id="nav-home" onclick="goTo('home')">
+      <span class="nav-icon">🏠</span><span class="nav-label">Home</span>
+    </button>
+    <button class="nav-btn" id="nav-quotes" onclick="goTo('quotes')">
+      <span class="nav-icon">✦</span><span class="nav-label">Quotes</span>
+    </button>
+    <button class="nav-btn" id="nav-books" onclick="goTo('books')">
+      <span class="nav-icon">📚</span><span class="nav-label">Books</span>
+    </button>
+    <button class="nav-btn" id="nav-journal" onclick="goTo('journal')">
+      <span class="nav-icon">📓</span><span class="nav-label">Journal</span>
+    </button>
+  </nav>
+</div>
+
+<script>
+// ── DATA ──
+const QUOTES = [
+  { text: "Your mind is your first wealth. Everything else is a reflection of it.", theme: "Wealth" },
+  { text: "The richest people invest in themselves before they invest in markets.", theme: "Wealth" },
+  { text: "Wealth is not what you earn. It is what you keep — and what you become.", theme: "Wealth" },
+  { text: "Money follows the disciplined mind like water follows a carved path.", theme: "Wealth" },
+  { text: "A wealthy life is built in silence, revealed in time.", theme: "Wealth" },
+  { text: "Every rupee you respect is a seed. Every rupee you waste is a lesson.", theme: "Wealth" },
+  { text: "The gap between wanting and having is always a plan.", theme: "Wealth" },
+  { text: "Abundance is a habit before it is a number in your account.", theme: "Wealth" },
+  { text: "Your relationship with money mirrors your relationship with yourself.", theme: "Wealth" },
+
+  { text: "What one generation calls a gap, the next calls a gift.", theme: "Generation Connect" },
+  { text: "Elders hold the map. Youth holds the compass. Together they find the way.", theme: "Generation Connect" },
+  { text: "The stories we do not share are the lessons we force others to learn twice.", theme: "Generation Connect" },
+  { text: "Every generation's rebellion is the previous one's unanswered question.", theme: "Generation Connect" },
+  { text: "Wisdom does not age. Only the packaging changes.", theme: "Generation Connect" },
+  { text: "A child's question is always wiser than the adult who dismisses it.", theme: "Generation Connect" },
+  { text: "We do not bridge generations by agreeing. We bridge them by listening.", theme: "Generation Connect" },
+
+  { text: "Gratitude is not the response to a good life. It is the cause of one.", theme: "Wisdom" },
+  { text: "Will is not the absence of doubt. It is moving despite it.", theme: "Wisdom" },
+  { text: "The wisest thing you can do today is question what you believed yesterday.", theme: "Wisdom" },
+  { text: "Every morning is a second chance that most people do not recognize.", theme: "Wisdom" },
+  { text: "You are not behind. You are on a path nobody else was meant to walk.", theme: "Wisdom" },
+  { text: "Silence is not emptiness. It is where clarity is born.", theme: "Wisdom" },
+  { text: "The strongest version of you was built on the hardest days.", theme: "Wisdom" },
+  { text: "Gratitude turns what you have into enough — and enough into abundance.", theme: "Wisdom" },
+  { text: "Your peace is worth more than their approval. Protect it.", theme: "Wisdom" },
+
+  { text: "Courage is not the absence of fear. It is deciding that something matters more.", theme: "Courage" },
+  { text: "The thing you keep postponing is usually the thing that will change your life.", theme: "Courage" },
+  { text: "Fear is the tax you pay on dreams you have not yet earned.", theme: "Courage" },
+  { text: "You were not built for comfort. You were built for growth.", theme: "Courage" },
+  { text: "Act first. Confidence is the reward, not the prerequisite.", theme: "Courage" },
+
+  { text: "Family is not where you come from. It is who stays when everything else leaves.", theme: "Family" },
+  { text: "The most valuable legacy you leave is the memory of how you made people feel.", theme: "Family" },
+  { text: "Every parent is doing their best with wounds they haven't named yet.", theme: "Family" },
+  { text: "Love is a daily practice, not a single declaration.", theme: "Family" },
+  { text: "Home is not a place. It is a feeling some people spend their whole lives searching for.", theme: "Family" },
+
+  { text: "Hope is not naivety. It is the discipline of seeing what is possible.", theme: "Hope" },
+  { text: "A single seed of hope, planted in the darkest season, can outlast any winter.", theme: "Hope" },
+  { text: "The light at the end of the tunnel exists. Keep walking.", theme: "Hope" },
+  { text: "Some of your best chapters have not been written yet.", theme: "Hope" },
+
+  { text: "Your worth is not measured by your productivity. Rest is not failure.", theme: "Worth" },
+  { text: "You owe no one a version of yourself that costs your peace.", theme: "Worth" },
+  { text: "The way you speak to yourself becomes the life you build.", theme: "Worth" },
+  { text: "Comparison is the tax you pay for not knowing your own value.", theme: "Worth" },
+
+  { text: "The body keeps score of every kindness you ignore for yourself.", theme: "Wellness" },
+  { text: "Sleep, water, and sunlight are free. Most people undervalue what they cannot price.", theme: "Wellness" },
+  { text: "Healing is not linear. Progress is not always visible.", theme: "Wellness" },
+  { text: "Your energy is your currency. Spend it on what compounds.", theme: "Wellness" },
+
+  { text: "Faith is not the absence of evidence. It is the presence of commitment.", theme: "Faith" },
+  { text: "Trust the process, even when the process feels like silence.", theme: "Faith" },
+  { text: "Something greater is always working — even when you cannot see it.", theme: "Faith" },
+
+  { text: "Life does not owe you a straight road. It owes you the strength to walk any road.", theme: "Life" },
+  { text: "The person you are becoming is always worth more than the comfort you are leaving.", theme: "Life" },
+  { text: "Every ending is a comma, not a full stop.", theme: "Life" },
+  { text: "The day you stop learning is the day you start ageing without living.", theme: "Life" },
+  { text: "Your story is not over. It is still being written.", theme: "Life" },
+];
+
+const THEMES = ["All", "Wealth", "Wisdom", "Generation Connect", "Courage", "Family", "Hope", "Worth", "Wellness", "Faith", "Life"];
+
+const BOOKS = [
+  {
+    icon: "🧠",
+    title: "Your Biggest Asset Is Your Mindset",
+    desc: "A transformative guide to unlocking abundance through the power of your inner world.",
+    price: "$7.99",
+    badge: "Bestseller",
+    url: "https://gumroad.com"
+  },
+  {
+    icon: "📓",
+    title: "30-Day Mindset Journal",
+    desc: "Daily prompts and reflections to rewire your thinking across 30 intentional days.",
+    price: "$7.99",
+    badge: "Practice",
+    url: "https://gumroad.com"
+  },
+  {
+    icon: "🃏",
+    title: "50 Affirmation Cards",
+    desc: "50 powerful affirmations designed to anchor your day in intention and worth.",
+    price: "$4.99",
+    badge: "Daily Use",
+    url: "https://gumroad.com"
+  },
+  {
+    icon: "🌱",
+    title: "Adolescence Inspired by Mannz",
+    desc: "Seven stories for young readers aged 12–18 navigating identity, courage and growth.",
+    price: "$5.99",
+    badge: "For Ages 12–18",
+    url: "https://gumroad.com"
+  },
+  {
+    icon: "🌅",
+    title: "Golden Agers Short Stories",
+    desc: "Ten stories celebrating the wisdom, grace and depth of lives well-lived.",
+    price: "$5.99",
+    badge: "For Older Adults",
+    url: "https://gumroad.com"
+  },
+  {
+    icon: "👨",
+    title: "Super Dads",
+    desc: "Stories of everyday fathers whose quiet strength shaped extraordinary children.",
+    price: "$4.99",
+    badge: "Family",
+    url: "https://gumroad.com"
+  },
+  {
+    icon: "🎁",
+    title: "Bundle: Mindset Collection",
+    desc: "Mindset Ebook + Journal + Affirmation Cards. Save 30%.",
+    price: "$14.99",
+    badge: "Best Value",
+    url: "https://gumroad.com"
+  },
+];
+
+const JOURNAL_PROMPTS = [
+  "What is one belief you hold about money that may not be serving you?",
+  "Name three things you are genuinely grateful for today — and why.",
+  "What would you do differently if you knew you could not fail?",
+  "Describe the version of yourself that you are working toward.",
+  "What is one lesson from an older generation that you have come to appreciate?",
+  "What habit, if removed, would immediately improve your life?",
+  "Write about a moment where your willpower surprised even you.",
+  "What does wealth mean to you beyond money?",
+  "Who in your life do you most need to understand better — and why?",
+  "What are you avoiding that you know deserves your attention?",
+];
+
+// ── STATE ──
+let currentQuote = QUOTES[0];
+let activeTab = "All";
+let deferredPrompt = null;
+
+// ── PWA INSTALL ──
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('installBtn').classList.add('visible');
+});
+
+function installApp() {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(() => { deferredPrompt = null; });
+  }
+}
+
+// ── INIT ──
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.getElementById('splash').classList.add('hide');
+  }, 1800);
+  setDailyQuote();
+  renderThemeTabs();
+  renderQuotes("All");
+  renderBooks();
+  initJournal();
+});
+
+// ── NAVIGATION ──
+function goTo(screen) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('screen-' + screen).classList.add('active');
+  document.getElementById('nav-' + screen).classList.add('active');
+}
+
+// ── DAILY QUOTE ──
+function setDailyQuote() {
+  const idx = Math.floor(Date.now() / 86400000) % QUOTES.length;
+  currentQuote = QUOTES[idx];
+  document.getElementById('dailyQuote').textContent = currentQuote.text;
+}
+
+function newDailyQuote() {
+  const idx = Math.floor(Math.random() * QUOTES.length);
+  currentQuote = QUOTES[idx];
+  document.getElementById('dailyQuote').textContent = currentQuote.text;
+}
+
+function openDailyModal() {
+  openModal(currentQuote.text);
+}
+
+// ── QUOTE MODAL ──
+function openModal(text) {
+  document.getElementById('modalQuoteText').textContent = '"' + text + '"';
+  document.getElementById('quoteModal').classList.add('open');
+  document.getElementById('quoteModal')._text = text;
+}
+function closeModal() {
+  document.getElementById('quoteModal').classList.remove('open');
+}
+function copyQuote() {
+  const text = document.getElementById('quoteModal')._text;
+  navigator.clipboard.writeText('"' + text + '" — Mannz').then(() => {
+    showToast('Copied to clipboard ✓');
+    closeModal();
+  });
+}
+function shareQuote() {
+  const text = document.getElementById('quoteModal')._text;
+  if (navigator.share) {
+    navigator.share({ title: 'Mannz Wisdom', text: '"' + text + '" — Mannz\n\nWords. Will. Wisdom.' });
+  } else {
+    copyQuote();
+  }
+}
+
+// ── THEME TABS ──
+function renderThemeTabs() {
+  const container = document.getElementById('themeTabs');
+  container.innerHTML = THEMES.map(t =>
+    `<button class="tab ${t === 'All' ? 'active' : ''}" onclick="setTab('${t}')">${t}</button>`
+  ).join('');
+}
+
+function setTab(theme) {
+  activeTab = theme;
+  document.querySelectorAll('.tab').forEach(t => {
+    t.classList.toggle('active', t.textContent === theme);
+  });
+  renderQuotes(theme);
+}
+
+// ── QUOTES GRID ──
+function renderQuotes(theme) {
+  const list = theme === 'All' ? QUOTES : QUOTES.filter(q => q.theme === theme);
+  document.getElementById('quotesGrid').innerHTML = list.map((q, i) => `
+    <div class="quote-card" onclick="openModal('${q.text.replace(/'/g, "\\'")}')">
+      <div class="quote-mark">"</div>
+      <div class="quote-text">${q.text}</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <span class="quote-theme-tag">${q.theme}</span>
+        <div class="quote-share-row">
+          <button class="icon-btn" onclick="event.stopPropagation();copyText('${q.text.replace(/'/g, "\\'")}')">📋</button>
+          <button class="icon-btn" onclick="event.stopPropagation();openModal('${q.text.replace(/'/g, "\\'")}')">↗</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function copyText(text) {
+  navigator.clipboard.writeText('"' + text + '" — Mannz').then(() => showToast('Copied ✓'));
+}
+
+// ── BOOKS ──
+function renderBooks() {
+  document.getElementById('booksList').innerHTML = BOOKS.map(b => `
+    <div class="book-card" onclick="window.open('${b.url}', '_blank')">
+      <div class="book-cover">${b.icon}</div>
+      <div class="book-info">
+        <div class="book-badge">${b.badge}</div>
+        <div class="book-title">${b.title}</div>
+        <div class="book-desc">${b.desc}</div>
+        <div class="book-price">${b.price} · Available on Gumroad ↗</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── JOURNAL ──
+function initJournal() {
+  const now = new Date();
+  document.getElementById('journalDate').textContent =
+    now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+  const promptIdx = now.getDate() % JOURNAL_PROMPTS.length;
+  document.getElementById('promptText').textContent = JOURNAL_PROMPTS[promptIdx];
+  renderSavedEntries();
+}
+
+function saveEntry() {
+  const text = document.getElementById('journalEntry').value.trim();
+  if (!text) { showToast('Write something first ✦'); return; }
+  const entries = JSON.parse(localStorage.getItem('mannz_journal') || '[]');
+  entries.unshift({ date: new Date().toLocaleDateString(), text });
+  localStorage.setItem('mannz_journal', JSON.stringify(entries.slice(0, 30)));
+  document.getElementById('journalEntry').value = '';
+  showToast('Entry saved ✓');
+  renderSavedEntries();
+}
+
+function renderSavedEntries() {
+  const entries = JSON.parse(localStorage.getItem('mannz_journal') || '[]');
+  const container = document.getElementById('savedEntries');
+  if (!entries.length) { container.innerHTML = ''; return; }
+  container.innerHTML = `
+    <div class="saved-label">Past Entries</div>
+    ${entries.map(e => `
+      <div class="entry-item">
+        <div class="entry-date">${e.date}</div>
+        <div class="entry-preview">${e.text.substring(0, 120)}${e.text.length > 120 ? '...' : ''}</div>
+      </div>
+    `).join('')}
+  `;
+}
+
+// ── TOAST ──
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// Service Worker registration
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
+</script>
+</body>
+</html>
